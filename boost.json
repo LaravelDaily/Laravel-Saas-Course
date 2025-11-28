@@ -1,0 +1,17 @@
+{
+    "agents": [
+        "claude_code",
+        "codex",
+        "copilot",
+        "cursor"
+    ],
+    "editors": [
+        "claude_code",
+        "codex",
+        "cursor",
+        "vscode"
+    ],
+    "guidelines": [
+        "laravel/fortify"
+    ]
+}
