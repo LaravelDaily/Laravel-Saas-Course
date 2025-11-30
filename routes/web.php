@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Auth\SocialiteController;
+use App\Http\Controllers\UserController;
+use App\Livewire\Auth\AcceptInvitation;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -15,6 +17,10 @@ Route::get('/', function () {
 Route::middleware(['guest'])->group(function () {
     Route::get('auth/{provider}/redirect', [SocialiteController::class, 'redirect'])->name('socialite.redirect');
     Route::get('auth/{provider}/callback', [SocialiteController::class, 'callback'])->name('socialite.callback');
+
+    Route::get('invitations/{invitation}/accept', AcceptInvitation::class)
+        ->name('invitations.accept')
+        ->middleware('signed');
 });
 
 Route::view('dashboard', 'dashboard')
@@ -38,4 +44,7 @@ Route::middleware(['auth'])->group(function () {
             ),
         )
         ->name('two-factor.show');
+
+    Route::resource('users', UserController::class)
+        ->only(['index', 'create', 'store', 'destroy']);
 });

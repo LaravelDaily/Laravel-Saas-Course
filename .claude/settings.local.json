@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs cat:*)",
+      "mcp__laravel-boost__application-info",
+      "mcp__laravel-boost__database-schema"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

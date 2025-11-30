@@ -2,6 +2,7 @@
 
 namespace App\Actions\Fortify;
 
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -30,10 +31,16 @@ class CreateNewUser implements CreatesNewUsers
             'password' => $this->passwordRules(),
         ])->validate();
 
+        $organization = Organization::create([
+            'name' => $input['name']."'s Organization",
+        ]);
+
         return User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => $input['password'],
+            'organization_id' => $organization->id,
+            'is_admin' => true,
         ]);
     }
 }

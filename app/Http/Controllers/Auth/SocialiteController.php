@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
@@ -23,18 +24,26 @@ class SocialiteController extends Controller
 
         $socialiteUser = Socialite::driver($provider)->user();
 
-        $user = User::firstOrCreate(
-            [
+        $user = User::where('oauth_provider', $provider)
+            ->where('oauth_id', $socialiteUser->getId())
+            ->first();
+
+        if (! $user) {
+            $organization = Organization::create([
+                'name' => ($socialiteUser->getName() ?? $socialiteUser->getNickname())."'s Organization",
+            ]);
+
+            $user = User::create([
                 'oauth_provider' => $provider,
                 'oauth_id' => $socialiteUser->getId(),
-            ],
-            [
                 'name' => $socialiteUser->getName() ?? $socialiteUser->getNickname(),
                 'email' => $socialiteUser->getEmail(),
                 'password' => Hash::make(str()->random(24)),
                 'email_verified_at' => now(),
-            ]
-        );
+                'organization_id' => $organization->id,
+                'is_admin' => true,
+            ]);
+        }
 
         auth()->login($user, remember: true);
 

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Organization;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -32,6 +33,8 @@ class UserFactory extends Factory
             'two_factor_secret' => Str::random(10),
             'two_factor_recovery_codes' => Str::random(10),
             'two_factor_confirmed_at' => now(),
+            'organization_id' => Organization::factory(),
+            'is_admin' => true,
         ];
     }
 
@@ -54,6 +57,16 @@ class UserFactory extends Factory
             'two_factor_secret' => null,
             'two_factor_recovery_codes' => null,
             'two_factor_confirmed_at' => null,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is a collaborator.
+     */
+    public function collaborator(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_admin' => false,
         ]);
     }
 }
