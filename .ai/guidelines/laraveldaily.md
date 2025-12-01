@@ -12,6 +12,7 @@
 - Use return types in functions whenever possible, adding the full path to classname to the top in `use` section
 - Generate Enums always in the folder `app/Enums`, not in the main `app/` folder, unless instructed differently.
 - Import all classes with `use` and reference only their short names; no fully-qualified class names in code.
+- Don't create temporary variables like `$currentUser = auth()->user()` in the method if that variable is used only one time
  
 ---
  
@@ -30,6 +31,7 @@
 - When adding columns in a migration, update the model’s `$fillable` array to include those new attributes.
 - Enums: If a PHP Enum exists for a domain concept, always use its cases (or their `->value`) instead of raw strings everywhere — routes, middleware, migrations, seeds, configs, and UI defaults.
 - Controllers: Single-method Controllers should use `__invoke()`; multi-method RESTful controllers should use `Route::resource()->only([])`
+- If `Route::resource()` is missing only 2-3 methods, then use `->except()` instead of `->only()`. Bad: `Route::resource()->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);`. Good: `Route::resource()->except(['show']);`.
  
 ---
  
