@@ -1,11 +1,11 @@
-<x-layouts.app :title="__('Tasks')">
+<x-layouts.app :title="__('Projects')">
     <div class="p-6 space-y-6">
         <div class="flex flex-wrap items-center justify-between gap-4">
-            <flux:heading size="xl">{{ __('Tasks') }}</flux:heading>
+            <flux:heading size="xl">{{ __('Projects') }}</flux:heading>
 
-            @can('create', App\Models\Task::class)
-                <flux:button variant="primary" :href="route('tasks.create')" icon="plus">
-                    {{ __('New Task') }}
+            @can('create', App\Models\Project::class)
+                <flux:button variant="primary" :href="route('projects.create')" icon="plus">
+                    {{ __('New Project') }}
                 </flux:button>
             @endcan
         </div>
@@ -29,16 +29,16 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-zinc-200 bg-white dark:divide-zinc-700 dark:bg-zinc-900">
-                    @forelse ($tasks as $task)
+                    @forelse ($projects as $project)
                         <tr>
                             <td class="whitespace-nowrap px-6 py-4 text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                                {{ $task->name }}
+                                {{ $project->name }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-4 text-end text-sm">
                                 <div class="flex items-center justify-end gap-2">
-                                    @can('view', $task)
+                                    @can('view', $project)
                                         <flux:button
-                                            :href="route('tasks.show', $task)"
+                                            :href="route('projects.show', $project)"
                                             variant="ghost"
                                             size="sm"
                                             icon="eye"
@@ -46,9 +46,9 @@
                                             {{ __('View') }}
                                         </flux:button>
                                     @endcan
-                                    @can('update', $task)
+                                    @can('update', $project)
                                         <flux:button
-                                            :href="route('tasks.edit', $task)"
+                                            :href="route('projects.edit', $project)"
                                             variant="ghost"
                                             size="sm"
                                             icon="pencil"
@@ -56,8 +56,8 @@
                                             {{ __('Edit') }}
                                         </flux:button>
                                     @endcan
-                                    @can('delete', $task)
-                                        <form action="{{ route('tasks.destroy', $task) }}" method="POST" class="inline">
+                                    @can('delete', $project)
+                                        <form action="{{ route('projects.destroy', $project) }}" method="POST" class="inline">
                                             @csrf
                                             @method('DELETE')
                                             <flux:button
@@ -65,7 +65,7 @@
                                                 variant="danger"
                                                 size="sm"
                                                 icon="trash"
-                                                onclick="return confirm('Are you sure you want to delete this task?')"
+                                                onclick="return confirm('Are you sure you want to delete this project?')"
                                             >
                                                 {{ __('Delete') }}
                                             </flux:button>
@@ -78,7 +78,7 @@
                         <tr>
                             <td colspan="2" class="px-6 py-12 text-center">
                                 <flux:text class="text-zinc-500 dark:text-zinc-400">
-                                    {{ __('No tasks yet. Create your first task to get started.') }}
+                                    {{ __('No projects yet. Create your first project to get started.') }}
                                 </flux:text>
                             </td>
                         </tr>
@@ -88,3 +88,6 @@
         </div>
     </div>
 </x-layouts.app>
+
+
+

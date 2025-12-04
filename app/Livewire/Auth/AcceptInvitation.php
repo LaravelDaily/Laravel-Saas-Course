@@ -5,6 +5,7 @@ namespace App\Livewire\Auth;
 use App\Models\Invitation;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
@@ -47,8 +48,9 @@ class AcceptInvitation extends Component
             'email' => $this->invitation->email,
             'password' => $validated['password'],
             'organization_id' => $this->invitation->organization_id,
-            'is_admin' => $this->invitation->is_admin,
         ]);
+
+        $user->assignRole($this->invitation->role);
 
         $this->invitation->update(['accepted_at' => now()]);
 
@@ -61,7 +63,7 @@ class AcceptInvitation extends Component
         $this->redirect(route('dashboard', absolute: false), navigate: true);
     }
 
-    public function render()
+    public function render(): View
     {
         return view('livewire.auth.accept-invitation');
     }

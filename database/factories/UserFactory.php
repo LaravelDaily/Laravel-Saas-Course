@@ -2,7 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Enums\RoleEnum;
 use App\Models\Organization;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -12,14 +14,9 @@ use Illuminate\Support\Str;
  */
 class UserFactory extends Factory
 {
-    /**
-     * The current password being used by the factory.
-     */
     protected static ?string $password;
 
     /**
-     * Define the model's default state.
-     *
      * @return array<string, mixed>
      */
     public function definition(): array
@@ -34,13 +31,18 @@ class UserFactory extends Factory
             'two_factor_recovery_codes' => Str::random(10),
             'two_factor_confirmed_at' => now(),
             'organization_id' => Organization::factory(),
-            'is_admin' => true,
         ];
     }
 
-    /**
-     * Indicate that the model's email address should be unverified.
-     */
+    public function configure(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            if (! $user->roles()->exists()) {
+                $user->assignRole(RoleEnum::Admin);
+            }
+        });
+    }
+
     public function unverified(): static
     {
         return $this->state(fn (array $attributes) => [
@@ -48,9 +50,6 @@ class UserFactory extends Factory
         ]);
     }
 
-    /**
-     * Indicate that the model does not have two-factor authentication configured.
-     */
     public function withoutTwoFactor(): static
     {
         return $this->state(fn (array $attributes) => [
@@ -60,13 +59,24 @@ class UserFactory extends Factory
         ]);
     }
 
-    /**
-     * Indicate that the user is a collaborator.
-     */
-    public function collaborator(): static
+    public function asAdmin(): static
     {
-        return $this->state(fn (array $attributes) => [
-            'is_admin' => false,
-        ]);
+        return $this->afterCreating(function (User $user) {
+            $user->syncRoles([RoleEnum::Admin]);
+        });
+    }
+
+    public function asUser(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            $user->syncRoles([RoleEnum::User]);
+        });
+    }
+
+    public function asViewer(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            $user->syncRoles([RoleEnum::Viewer]);
+        });
     }
 }

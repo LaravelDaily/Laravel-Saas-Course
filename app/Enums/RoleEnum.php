@@ -5,7 +5,8 @@ namespace App\Enums;
 enum RoleEnum: string
 {
     case Admin = 'admin';
-    case Collaborator = 'collaborator';
+    case User = 'user';
+    case Viewer = 'viewer';
 
     public function isAdmin(): bool
     {
@@ -16,7 +17,8 @@ enum RoleEnum: string
     {
         return match ($this) {
             self::Admin => 'Administrator',
-            self::Collaborator => 'Collaborator',
+            self::User => 'User',
+            self::Viewer => 'Viewer',
         };
     }
 }

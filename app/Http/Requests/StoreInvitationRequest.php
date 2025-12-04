@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Enums\RoleEnum;
 use App\Models\User;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -11,13 +12,11 @@ class StoreInvitationRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->is_admin ?? false;
+        return $this->user()?->hasPermissionTo('users.create') ?? false;
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -36,6 +35,9 @@ class StoreInvitationRequest extends FormRequest
         ];
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function messages(): array
     {
         return [

@@ -21,11 +21,14 @@ class InviteForm extends Component
 
     public function mount(): void
     {
-        abort_unless(auth()->user()->is_admin, 403);
+        abort_unless(auth()->user()->hasPermissionTo('users.create'), 403);
 
-        $this->role = RoleEnum::Admin->value;
+        $this->role = RoleEnum::User->value;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function rules(): array
     {
         return [
@@ -43,6 +46,9 @@ class InviteForm extends Component
         ];
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function messages(): array
     {
         return [
@@ -57,17 +63,15 @@ class InviteForm extends Component
     {
         $currentUser = auth()->user();
 
-        abort_unless($currentUser->is_admin, 403);
+        abort_unless($currentUser->hasPermissionTo('users.create'), 403);
 
         $this->validate();
-
-        $roleEnum = RoleEnum::from($this->role);
 
         $invitation = Invitation::create([
             'organization_id' => $currentUser->organization_id,
             'name' => $this->name,
             'email' => $this->email,
-            'is_admin' => $roleEnum->isAdmin(),
+            'role' => $this->role,
             'token' => Str::uuid()->toString(),
         ]);
 

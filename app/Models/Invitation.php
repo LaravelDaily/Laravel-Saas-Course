@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\RoleEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,7 +19,7 @@ class Invitation extends Model
         'organization_id',
         'name',
         'email',
-        'is_admin',
+        'role',
         'token',
         'accepted_at',
     ];
@@ -29,7 +30,7 @@ class Invitation extends Model
     protected function casts(): array
     {
         return [
-            'is_admin' => 'boolean',
+            'role' => RoleEnum::class,
             'accepted_at' => 'datetime',
         ];
     }

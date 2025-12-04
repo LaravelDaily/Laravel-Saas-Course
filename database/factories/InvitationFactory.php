@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\RoleEnum;
 use App\Models\Organization;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -20,16 +21,23 @@ class InvitationFactory extends Factory
             'organization_id' => Organization::factory(),
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'is_admin' => true,
+            'role' => RoleEnum::Admin->value,
             'token' => Str::uuid()->toString(),
             'accepted_at' => null,
         ];
     }
 
-    public function collaborator(): static
+    public function asUser(): static
     {
         return $this->state(fn (array $attributes) => [
-            'is_admin' => false,
+            'role' => RoleEnum::User->value,
+        ]);
+    }
+
+    public function asViewer(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => RoleEnum::Viewer->value,
         ]);
     }
 }

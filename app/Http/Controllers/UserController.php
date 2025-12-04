@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\RoleEnum;
 use App\Http\Requests\StoreInvitationRequest;
 use App\Models\Invitation;
 use App\Models\User;
@@ -18,7 +17,7 @@ class UserController extends Controller
     {
         $currentUser = auth()->user();
 
-        abort_unless($currentUser->is_admin, 403);
+        abort_unless($currentUser->hasPermissionTo('users.viewAny'), 403);
 
         $users = User::query()
             ->where('organization_id', $currentUser->organization_id)
@@ -42,7 +41,7 @@ class UserController extends Controller
     {
         $currentUser = auth()->user();
 
-        abort_unless($currentUser->is_admin, 403);
+        abort_unless($currentUser->hasPermissionTo('users.create'), 403);
 
         return view('users.create');
     }
@@ -51,13 +50,11 @@ class UserController extends Controller
     {
         $validated = $request->validated();
 
-        $roleEnum = RoleEnum::from($validated['role']);
-
         $invitation = Invitation::create([
             'organization_id' => $request->user()->organization_id,
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'is_admin' => $roleEnum->isAdmin(),
+            'role' => $validated['role'],
             'token' => Str::uuid()->toString(),
         ]);
 
@@ -73,7 +70,7 @@ class UserController extends Controller
     {
         $currentUser = auth()->user();
 
-        abort_unless($currentUser->is_admin, 403);
+        abort_unless($currentUser->hasPermissionTo('users.delete'), 403);
         abort_if($user->id === $currentUser->id, 403);
         abort_unless($user->organization_id === $currentUser->organization_id, 403);
 

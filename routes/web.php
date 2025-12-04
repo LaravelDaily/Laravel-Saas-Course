@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\SocialiteController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use App\Livewire\Auth\AcceptInvitation;
@@ -50,5 +51,7 @@ Route::middleware(['auth'])->group(function () {
         ->only(['index', 'create', 'store', 'destroy']);
 
     Route::resource('tasks', TaskController::class)
-        ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+        ->only(['index', 'show', 'create', 'store', 'edit', 'update', 'destroy']);
+
+    Route::resource('projects', ProjectController::class);
 });

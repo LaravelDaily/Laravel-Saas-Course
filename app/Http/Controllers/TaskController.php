@@ -13,6 +13,8 @@ class TaskController extends Controller
 {
     public function index(): View
     {
+        Gate::authorize('viewAny', Task::class);
+
         $tasks = Task::query()
             ->where('organization_id', auth()->user()->organization_id)
             ->orderByDesc('created_at')
@@ -20,6 +22,15 @@ class TaskController extends Controller
 
         return view('tasks.index', [
             'tasks' => $tasks,
+        ]);
+    }
+
+    public function show(Task $task): View
+    {
+        Gate::authorize('view', $task);
+
+        return view('tasks.show', [
+            'task' => $task,
         ]);
     }
 

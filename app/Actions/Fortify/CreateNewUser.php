@@ -2,6 +2,7 @@
 
 namespace App\Actions\Fortify;
 
+use App\Enums\RoleEnum;
 use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
@@ -13,8 +14,6 @@ class CreateNewUser implements CreatesNewUsers
     use PasswordValidationRules;
 
     /**
-     * Validate and create a newly registered user.
-     *
      * @param  array<string, string>  $input
      */
     public function create(array $input): User
@@ -35,12 +34,15 @@ class CreateNewUser implements CreatesNewUsers
             'name' => $input['name']."'s Organization",
         ]);
 
-        return User::create([
+        $user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => $input['password'],
             'organization_id' => $organization->id,
-            'is_admin' => true,
         ]);
+
+        $user->assignRole(RoleEnum::Admin);
+
+        return $user;
     }
 }
