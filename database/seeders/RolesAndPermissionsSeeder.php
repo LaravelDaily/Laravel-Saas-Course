@@ -36,6 +36,9 @@ class RolesAndPermissionsSeeder extends Seeder
 
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
+        $superAdminRole = Role::firstOrCreate(['name' => RoleEnum::SuperAdmin->value, 'guard_name' => 'web']);
+        $superAdminRole->syncPermissions($permissions);
+
         $adminRole = Role::firstOrCreate(['name' => RoleEnum::Admin->value, 'guard_name' => 'web']);
         $adminRole->syncPermissions($permissions);
 

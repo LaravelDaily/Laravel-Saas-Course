@@ -2,7 +2,6 @@
     "agents": [
         "claude_code",
         "codex",
-        "copilot",
         "cursor"
     ],
     "editors": [
@@ -12,6 +11,7 @@
         "vscode"
     ],
     "guidelines": [
-        "laravel/fortify"
+        "laravel/fortify",
+        "filament/filament"
     ]
 }

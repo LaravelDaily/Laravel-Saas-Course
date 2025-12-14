@@ -60,6 +60,13 @@ class UserFactory extends Factory
         ]);
     }
 
+    public function asSuperAdmin(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            $user->syncRoles([RoleEnum::SuperAdmin]);
+        });
+    }
+
     public function asAdmin(): static
     {
         return $this->afterCreating(function (User $user) {
